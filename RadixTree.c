@@ -36,26 +36,25 @@ void insert_in_array(RadixNode * node, RadixEdge * edge){
 /**
  * Helps setting the value of edge, only used for making code prettier.
  */ 
-void set_label(RadixEdge * edge, char * value){
+void set_label(RadixEdge * edge, char * value, int len){
 	if(edge == NULL ){
 		return;
 	}
-	edge->label = malloc(sizeof(char)*strlen(value));
-	memcpy(edge->label, value,sizeof(char)*strlen(value));
+	edge->label = malloc(sizeof(char)*len);
+	memcpy(edge->label, value,sizeof(char)*len);
 	edge->label_len = strlen(edge->label);	//Since otherwise we would have to do this alot!
 }
 
 /**
  * 
  */
-int max_prefix_len(char * str1, char * prefix ){
+int max_prefix_len(char * str1, char * prefix, int matched){
 	int s1_len = strlen(str1);
 	int s2_len = strlen(prefix);
-	int i = 0;
+	int i = matched;
 	while( ( i < s1_len && i < s2_len )  && str1[i] == prefix[i]){
 		i++;
 	}
-	fprintf(stderr,"Jag kommr retuenr %d\n",i);
 	return i;
 }
 void insert(RadixNode * root, char * name, void * value){
@@ -70,7 +69,7 @@ void insert(RadixNode * root, char * name, void * value){
 	//New empty tree, insert immidiately.
 	if(root->num_edges == 0 ){
 		RadixEdge * edge = malloc(sizeof(RadixEdge));
-		set_label(edge,name);
+		set_label(edge,name,strlen(name));
 		edge->from = root;
 		edge->target = new_node;
 		insert_in_array(root, edge);
@@ -83,14 +82,15 @@ void insert(RadixNode * root, char * name, void * value){
 	RadixNode * best_node = NULL;
 	RadixEdge * best_edge = NULL;
 	int max_prefix;
+	int matched = 0;
 	while(current_node != NULL){
 		max_prefix = 0;
 		int i;
 		
 		//Find the longest prefix.
 		for(i = 0; i< current_node -> num_edges; i++){
-			
-			int prefix_len = max_prefix_len(current_node->edges[i]->label, name);
+			//Här måste vi hålla reda på hur mycket vi redan matchat.
+			int prefix_len = max_prefix_len(current_node->edges[i]->label, name,matched);
 			if(prefix_len > 0 && prefix_len > max_prefix ) {
 				max_prefix = prefix_len;
 				best_node = current_node;
@@ -100,24 +100,51 @@ void insert(RadixNode * root, char * name, void * value){
 	
 		//To avoid iterating same edges.
 		if(current_node == best_node || best_node == NULL){
+			current_edge = best_edge;
 			break;
 		}
-		
+
 		current_node = best_node;
 		current_edge = best_edge;
 	}
 	
+	assert(current_node != NULL);
+	
 	//Special case, no previous 
 	if(max_prefix <= 0 ){
 		RadixEdge * edge = malloc(sizeof(RadixEdge));
-		set_label(edge,name);
+		set_label(edge,name,strlen(name));
 		
 		edge->from = current_node;
 		edge->target = new_node;
 		insert_in_array(current_node, edge);
 		return;
 	}
-	fprintf(stderr,"%d -> \n", max_prefix);
+	assert(current_edge != NULL);
+	RadixEdge * new_edge_old =  malloc(sizeof(RadixEdge));
+	RadixEdge * new_edge_new =  malloc(sizeof(RadixEdge));
+	
+	
+	RadixNode * new_sub_node =  malloc(sizeof(RadixNode));
+	
+	new_edge_old->from = new_sub_node;
+	new_edge_old->target = current_edge->target;
+	set_label(new_edge_old, &current_edge->label[max_prefix], strlen(current_edge->label));
+	
+	new_edge_new ->target = new_node;
+	new_edge_new->from = new_sub_node;
+	set_label(new_edge_new, &name[max_prefix], strlen(name)-max_prefix);
+
+	current_edge->target = new_sub_node;
+	
+	//Set label to the maximal matched prefix.
+	set_label(current_edge,current_edge->label,max_prefix);
+	
+	//Sätt labelen.
+	insert_in_array(new_sub_node, new_edge_old);
+	insert_in_array(new_sub_node, new_edge_new);
+
+
 	//~ if(max_prefix > current_edge->label_len){
 //~ 
 	//~ }

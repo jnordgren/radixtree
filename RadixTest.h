@@ -17,17 +17,17 @@
 #include "AceUnit.h"
 
 /* The prototypes are here to be able to include this header file at the beginning of the test file instead of at the end. */
-A_Test void testRadix(void);
+A_Test void testRadixSimpleInsertions(void);
 
 /** The test case ids of this fixture. */
 static const TestCaseId_t testIds[] = {
-    2, /* testRadix */
+    2, /* testRadixSimpleInsertions */
 };
 
 #ifndef ACEUNIT_EMBEDDED
 /** The test names of this fixture. */
 static const char *const testNames[] = {
-    "testRadix",
+    "testRadixSimpleInsertions",
 };
 #endif
 
@@ -47,7 +47,7 @@ static const AceGroupId_t groups[] = {
 
 /** The test cases of this fixture. */
 static const testMethod_t testCases[] = {
-    testRadix,
+    testRadixSimpleInsertions,
     NULL
 };
 

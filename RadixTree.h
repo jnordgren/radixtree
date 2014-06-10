@@ -2,7 +2,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
-
+#include <assert.h>
 
 #define ARRAY_G_FACTOR 2
 
