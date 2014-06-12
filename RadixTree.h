@@ -31,6 +31,8 @@ void insert(RadixNode * root, char * name, void * value);
 
 void delete();
 
-RadixNode * find(char * name);
+RadixNode * find(RadixNode * root,char * name);
 
-void * find_value(char * name);
+void * find_value(RadixNode * root,char * name);
+
+void pretty_print(RadixNode * root, int tabs);

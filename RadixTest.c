@@ -3,6 +3,52 @@
 
 #include "RadixTree.h"
 
+A_Test void testRadixInsertionsAndFinds() {
+		RadixNode * root = create();
+		char * val1 = "hej sa petronella";
+		char * val2 = "ipsum_dollares";
+		char * val3 = "€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€";
+		char * val4 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+		char * val5 = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+		char * val6 = "popiyguyhashdsgjsdfuhiuwhiujadsiuhiuahfohtåphlåptlåprlhåpelhgopjkdg";
+		insert(root,"petronella",val1);
+		insert(root,"bilen",val3);
+		insert(root,"peter",val2);
+		insert(root,"petelapa",val2);
+		
+		
+		
+		
+		//~ fprintf(stderr,"Nu kommer bassningen **************\n");
+		insert(root,"bassning",val5);
+		insert(root,"banankaka",val4);
+pretty_print(root,0);
+		insert(root,"båẗen heter anna",val6);
+
+		pretty_print(root,0);
+		RadixNode * found = find(root,"NoTHEREMATE");
+		assertEquals("This name should not be found",found,NULL);
+		found = find(root,"petronella");
+		//~ assertNotNull("petronella : val1", found);
+//~ 
+		//~ assertEquals("petronella : val1", found->value,val1);
+		//~ 
+		//~ found = find(root,"peter");
+		//~ assertNotNull("peter - not found", found);
+		//~ assertEquals("peter : val2", found->value,val2);
+		//~ 
+		//~ found = find(root,"bilen");
+		//~ assertNotNull("bilen - not found", found);
+		//~ assertEquals("bilen : val3", found->value,val3);
+		//~ 
+		//~ found = find(root,"banankaka");
+		//~ assertNotNull("banankaka - not found", found);
+		//~ assertEquals("banankaka : val4", found->value,val4);
+		
+		found = find(root,"bassning");
+		assertNotNull("bassning - not found", found);
+		assertEquals("bassning : val5", found->value,val5);
+}
 A_Test void testRadixSimpleInsertions() {
 		RadixNode * root = create();
 		
